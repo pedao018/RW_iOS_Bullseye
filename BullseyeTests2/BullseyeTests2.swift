@@ -19,6 +19,11 @@ class BullseyeTests2: XCTestCase {
     }
     
     func testExample() throws {
-        XCTAssertEqual(game.points(sliderValue: 50), 99)
+//        XCTAssertEqual(game.points(sliderValue: 50), 99)
+    }
+    
+    func testNewRound(){
+        game.startNewRound(points: 2)
+        XCTAssertEqual(game.round, 1)
     }
 }

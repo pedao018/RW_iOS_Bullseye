@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     
     @State private var alertIsVisible : Bool = false
-    @State private var sliderValue : Double = 15.0
+    @State private var sliderValue : Double = 50.0
     @State private var game : Game = Game()
     
     var body: some View {
@@ -18,8 +18,11 @@ struct ContentView: View {
             BackgroundView(game: $game)
             VStack {
                 InstructionsView(game: $game)
-                SliderView(sliderValue: self.$sliderValue)
+                    .padding(.bottom,100)
                 ButtonView(alertIsVisible: $alertIsVisible, sliderValue: $sliderValue, game: $game)
+            }
+            VStack{
+                SliderView(sliderValue: self.$sliderValue)
             }
         }
     }
@@ -39,10 +42,10 @@ struct SliderView : View{
     @Binding var sliderValue : Double
     var body: some View{
         HStack{
-            MyTextView(text: "1")
+            MyTextView(text: "1").frame(width: 45)
             Slider(value: $sliderValue
                    ,in: 1.0...100.0)
-            MyTextView(text: "100")
+            MyTextView(text: "100").frame(width: 45)
         }.padding()
     }
 }
@@ -69,12 +72,15 @@ struct ButtonView : View{
         .foregroundColor(Color.white)
         .cornerRadius(25.0)
         .overlay(
-            RoundedRectangle(cornerRadius: /*@START_MENU_TOKEN@*/25.0/*@END_MENU_TOKEN@*/)
+            RoundedRectangle(cornerRadius: 25.0)
                 .strokeBorder(Color("TextColor"),lineWidth: 1.5)
         )
         .alert(isPresented: $alertIsVisible, content: {
             let roundedValue : Int = Int(self.sliderValue.rounded())
-            return Alert(title: Text("Hello There!"), message: Text("Hi, your Slider value is \(sliderValue). Rounded value is \(roundedValue).\n Your target is \(game.target). Your point is \(game.points(sliderValue: roundedValue))"), dismissButton: .default(Text("Close")))
+            let points = game.points(sliderValue: roundedValue)
+            return Alert(title: Text("Hello There!"), message: Text("Hi, your Slider value is \(sliderValue). Rounded value is \(roundedValue).\n Your target is \(game.target). Your point is \(points)"), dismissButton: .default(Text("Close Awesome")){
+                game.startNewRound(points: points)
+            })
         })
     }
 }
